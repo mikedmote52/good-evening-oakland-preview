@@ -88,6 +88,19 @@ img { display: block; max-width: 100%; }
   transform-origin: 72% 26%;
 }
 
+.table-product-spread {
+  position: absolute;
+  z-index: 3;
+  left: 48%;
+  bottom: 12%;
+  width: min(78vw, 310px);
+  height: auto;
+  pointer-events: none;
+  filter: drop-shadow(0 20px 18px rgba(16, 38, 31, .22));
+  transform: translateX(-50%) rotate(-1.2deg);
+  transform-origin: 50% 80%;
+}
+
 .scene-shell::after {
   position: absolute;
   inset: 0;
@@ -423,6 +436,7 @@ img { display: block; max-width: 100%; }
   .copy-arrival { top: 23%; }
   .copy-arrival h1 { font-size: clamp(72px, 8.5vw, 134px); }
   .copy-sharing, .copy-opening { top: 40%; font-size: clamp(74px, 8.5vw, 132px); }
+  .table-product-spread { left: 65%; bottom: 2%; width: min(28vw, 520px); }
   .primary-action { right: 34px; bottom: 30px; }
   .product-reveal { padding: 110px 5vw 46px; }
   .product-reveal h2, .chapter h2, .release h2 { font-size: clamp(72px, 8vw, 122px); }
@@ -442,6 +456,10 @@ img { display: block; max-width: 100%; }
   .responsibility-grid { margin-top: 0; }
   .responsibility-note { grid-column: 2; }
   .release { padding: 120px 5vw 38px; }
+}
+
+@media (min-width: 1800px) and (min-height: 1100px) {
+  .table-product-spread { bottom: 6%; }
 }
 
 @media (max-height: 720px) and (max-width: 759px) {

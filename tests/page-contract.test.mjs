@@ -30,3 +30,22 @@ test("the public release chapter collects nothing", () => {
   assert.doesNotMatch(html, /<form|type="email"|type="submit"/i);
   assert.doesNotMatch(script, /fetch\(|XMLHttpRequest|sendBeacon/i);
 });
+
+test("the shared table carries a transparent product spread through both scene states", async () => {
+  assert.match(
+    html,
+    /<img class="table-product-spread" src="assets\/table-product-spread\.png" alt="" aria-hidden="true">/,
+  );
+
+  let productSpread;
+  try {
+    productSpread = await readFile(
+      new URL("../assets/table-product-spread.png", import.meta.url),
+    );
+  } catch {
+    assert.fail("the table product spread asset is missing");
+  }
+
+  assert.deepEqual([...productSpread.subarray(1, 4)], [80, 78, 71]);
+  assert.equal(productSpread[25], 6, "the PNG must use RGBA color with real transparency");
+});
