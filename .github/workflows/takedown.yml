@@ -1,0 +1,28 @@
+name: Disable public preview
+
+on:
+  schedule:
+    - cron: "0 16 19 8 *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+
+jobs:
+  disable:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enforce one-time date
+        id: date
+        run: |
+          if [ "$(date -u +%F)" = "2026-08-19" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Disable GitHub Pages
+        if: steps.date.outputs.run == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method DELETE "repos/${{ github.repository }}/pages"
