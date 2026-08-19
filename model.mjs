@@ -47,12 +47,15 @@ export function getStoryState(progress) {
   const flourish = segment(p, 0.35, 0.66);
   const explain = segment(p, 0.72, 0.96);
 
+  const panelShift = 100 * (1 - explain);
+
   return {
     phase: p < 0.24 ? "arrival" : p < 0.5 ? "sharing" : p < 0.8 ? "flourish" : "explain",
     flourish,
     sceneOpacity: 1 - explain,
     sceneShift: -4 * explain,
-    panelShift: 100 * (1 - explain),
+    panelShift,
+    panelShiftCss: `${panelShift}%`,
     seamOpacity: Math.sin(Math.PI * explain),
     headlineOpacity: 1 - segment(p, 0.1, 0.27),
     headlineShift: -28 * segment(p, 0.1, 0.27),

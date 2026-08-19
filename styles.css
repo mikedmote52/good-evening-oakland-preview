@@ -38,7 +38,7 @@ img { display: block; max-width: 100%; }
   --flourish: 0;
   --scene-opacity: 1;
   --scene-shift: 0%;
-  --panel-shift: 100px;
+  --panel-shift: 100%;
   --seam-opacity: 0;
   --headline-opacity: 1;
   --headline-shift: 0px;
@@ -139,6 +139,14 @@ img { display: block; max-width: 100%; }
   justify-content: space-between;
   padding: max(20px, env(safe-area-inset-top)) 20px 0;
   color: var(--milk);
+}
+
+.scroll-story[data-phase="explain"] .site-nav { color: var(--ink); }
+.scroll-story[data-phase="explain"] .desktop-nav a,
+.scroll-story[data-phase="explain"] .mobile-menu summary {
+  border-color: rgba(33, 65, 57, .24);
+  color: var(--ink);
+  background: rgba(247, 248, 238, .76);
 }
 
 .wordmark {

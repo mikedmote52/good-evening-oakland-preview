@@ -28,3 +28,8 @@ test("scene opacity and panel position finish at the static explanation", () => 
   assert.equal(state.panelShift, 0);
   assert.ok(Math.abs(state.seamOpacity) < 1e-12);
 });
+
+test("the product panel uses viewport-relative travel instead of pixels", () => {
+  assert.equal(getStoryState(0).panelShiftCss, "100%");
+  assert.equal(getStoryState(1).panelShiftCss, "0%");
+});

@@ -68,7 +68,8 @@ function updateStory() {
   story.dataset.phase = state.phase;
   for (const [key, property] of Object.entries(cssProperties)) {
     const suffix = key === "sceneShift" ? "%" : key.includes("Shift") ? "px" : "";
-    story.style.setProperty(property, `${state[key]}${suffix}`);
+    const value = key === "panelShift" ? state.panelShiftCss : `${state[key]}${suffix}`;
+    story.style.setProperty(property, value);
   }
   framePending = false;
 }
