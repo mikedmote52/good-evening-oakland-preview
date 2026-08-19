@@ -12,7 +12,7 @@ test("Pages deploys the tested static root", () => {
 });
 
 test("takedown disables Pages once at the approved Pacific time", () => {
-  assert.match(takedown, /cron:\s*["']0 16 19 8 \*["']/);
+  assert.match(takedown, /cron:\s*["']0 19 19 8 \*["']/);
   assert.match(takedown, /2026-08-19/);
   assert.match(takedown, /DELETE/);
   assert.match(takedown, /repos\/\$\{\{ github\.repository \}\}\/pages/);
