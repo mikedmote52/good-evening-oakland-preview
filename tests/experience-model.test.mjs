@@ -38,4 +38,3 @@ test("the final information panel arrives completely and the scene leaves cleanl
   assert.equal(final.middleOpacity, 0);
   assert.equal(final.focusOpacity, 0);
 });
-

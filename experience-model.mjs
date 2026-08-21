@@ -34,4 +34,3 @@ export function getExperienceState(progress) {
     focusShift: 42 * (1 - focus) - 24 * focusExit,
   };
 }
-
