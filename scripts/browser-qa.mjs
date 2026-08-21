@@ -1,12 +1,20 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
-import { createReadStream } from "node:fs";
+import { createReadStream, existsSync } from "node:fs";
 import { mkdir, mkdtemp, rm, stat, writeFile } from "node:fs/promises";
 import { createServer } from "node:http";
 import os from "node:os";
 import path from "node:path";
 
-const chromePath = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+const chromeCandidates = [
+  process.env.CHROME_PATH,
+  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+  "/Applications/Chromium.app/Contents/MacOS/Chromium",
+  "/usr/bin/google-chrome",
+  "/usr/bin/chromium",
+].filter(Boolean);
+const chromePath = chromeCandidates.find(existsSync);
+if (!chromePath) throw new Error("Chrome or Chromium was not found. Set CHROME_PATH to its executable.");
 const previewPort = 4174;
 const origin = process.env.PREVIEW_ORIGIN || `http://127.0.0.1:${previewPort}`;
 const proofDirectory = process.env.PROOF_DIRECTORY || "/tmp/good-evening-browser-proof";
@@ -304,7 +312,10 @@ try {
   for (const slug of ["sunlit-garden", "golden-hour", "warm-dusk"]) {
     results.push(await verifyRoute(session, slug, 1440, 900));
   }
-  const reducedMotion = await verifyReducedMotion(session, "sunlit-garden");
+  const reducedMotion = [];
+  for (const slug of ["sunlit-garden", "golden-hour", "warm-dusk"]) {
+    reducedMotion.push({ slug, state: await verifyReducedMotion(session, slug) });
+  }
   console.log(JSON.stringify({ results, reducedMotion, proofDirectory }, null, 2));
 } finally {
   session?.close();
