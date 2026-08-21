@@ -6,6 +6,8 @@ import { createServer } from "node:http";
 import os from "node:os";
 import path from "node:path";
 
+import { terminateAndWait } from "./process-lifecycle.mjs";
+
 const chromeCandidates = [
   process.env.CHROME_PATH,
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
@@ -319,7 +321,7 @@ try {
   console.log(JSON.stringify({ results, reducedMotion, proofDirectory }, null, 2));
 } finally {
   session?.close();
-  chrome.kill("SIGTERM");
+  await terminateAndWait(chrome);
   if (!process.env.PREVIEW_ORIGIN) await new Promise((resolve) => previewServer.close(resolve));
   await rm(profileDirectory, { recursive: true, force: true });
 }
