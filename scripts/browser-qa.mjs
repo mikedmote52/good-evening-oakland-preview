@@ -76,6 +76,8 @@ if (!process.env.PREVIEW_ORIGIN) {
 
 await mkdir(proofDirectory, { recursive: true });
 
+let chromeExit = null;
+let chromeStderr = "";
 const chrome = spawn(chromePath, [
   "--headless=new",
   `--remote-debugging-port=${debugPort}`,
@@ -88,7 +90,14 @@ const chrome = spawn(chromePath, [
   "--no-first-run",
   "--no-default-browser-check",
   "about:blank",
-], { stdio: "ignore" });
+], { stdio: ["ignore", "ignore", "pipe"] });
+chrome.stderr.setEncoding("utf8");
+chrome.stderr.on("data", (chunk) => {
+  chromeStderr = `${chromeStderr}${chunk}`.slice(-8_000);
+});
+chrome.on("exit", (code, signal) => {
+  chromeExit = { code, signal };
+});
 
 const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
@@ -100,7 +109,9 @@ async function waitForDebugging() {
     } catch {}
     await wait(100);
   }
-  throw new Error("Chrome debugging endpoint did not start");
+  throw new Error(
+    `Chrome debugging endpoint did not start. Executable: ${chromePath}. Exit: ${JSON.stringify(chromeExit)}. stderr: ${chromeStderr || "(empty)"}`,
+  );
 }
 
 class CdpSession {
