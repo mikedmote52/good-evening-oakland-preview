@@ -7,6 +7,7 @@ import os from "node:os";
 import path from "node:path";
 
 import { terminateAndWait } from "./process-lifecycle.mjs";
+import { waitForEndpoint } from "./wait-for-endpoint.mjs";
 
 const chromeCandidates = [
   process.env.CHROME_PATH,
@@ -99,19 +100,14 @@ chrome.on("exit", (code, signal) => {
   chromeExit = { code, signal };
 });
 
-const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
-
 async function waitForDebugging() {
-  for (let attempt = 0; attempt < 80; attempt += 1) {
-    try {
-      const response = await fetch(`http://127.0.0.1:${debugPort}/json/version`);
-      if (response.ok) return;
-    } catch {}
-    await wait(100);
+  try {
+    await waitForEndpoint(`http://127.0.0.1:${debugPort}/json/version`);
+  } catch {
+    throw new Error(
+      `Chrome debugging endpoint did not start. Executable: ${chromePath}. Exit: ${JSON.stringify(chromeExit)}. stderr: ${chromeStderr || "(empty)"}`,
+    );
   }
-  throw new Error(
-    `Chrome debugging endpoint did not start. Executable: ${chromePath}. Exit: ${JSON.stringify(chromeExit)}. stderr: ${chromeStderr || "(empty)"}`,
-  );
 }
 
 class CdpSession {
