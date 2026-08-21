@@ -22,10 +22,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.13.0
+      - name: Run contract tests
+        run: npm test
+      - name: Run browser QA
+        run: npm run qa:browser
+      - name: Prepare public artifact
+        run: |
+          mkdir -p _site
+          rsync -a \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='_site/' \
+            --exclude='node_modules/' \
+            --exclude='tests/' \
+            --exclude='scripts/' \
+            --exclude='package*.json' \
+            --exclude='assets/concepts/hero-*.png' \
+            ./ _site/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
