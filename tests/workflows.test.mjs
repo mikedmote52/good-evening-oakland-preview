@@ -6,8 +6,12 @@ const pages = await readFile(new URL("../.github/workflows/pages.yml", import.me
 const takedown = await readFile(new URL("../.github/workflows/takedown.yml", import.meta.url), "utf8");
 
 test("Pages deploys the tested static root", () => {
+  assert.match(pages, /actions\/setup-node@v4/);
+  assert.match(pages, /run:\s*npm test/);
+  assert.match(pages, /run:\s*npm run qa:browser/);
+  assert.match(pages, /assets\/concepts\/hero-\*\.png/);
   assert.match(pages, /actions\/upload-pages-artifact@v3/);
-  assert.match(pages, /path:\s*\./);
+  assert.match(pages, /path:\s*_site/);
   assert.match(pages, /actions\/deploy-pages@v4/);
 });
 
